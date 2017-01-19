@@ -202,17 +202,15 @@ bool NginxConfigParser::Parse(std::istream* config_file, NginxConfig* config) {
       config_stack.push(new_config);
     } else if (token_type == TOKEN_TYPE_END_BLOCK) {
        open_count--;
-       if (last_token_type != TOKEN_TYPE_STATEMENT_END) {
-        // Error.
-        if (last_token_type != TOKEN_TYPE_END_BLOCK &&
-               last_token_type != TOKEN_TYPE_START_BLOCK) {
-             break;
-        }
-        else if (open_count < 0) {
-             break;
-        }
+       if (open_count < 0)
+           break;
+       else if (last_token_type != TOKEN_TYPE_STATEMENT_END &&
+            last_token_type != TOKEN_TYPE_END_BLOCK &&
+            last_token_type != TOKEN_TYPE_START_BLOCK) 
+	  {
+            break;
+          }
        
-       }
       config_stack.pop();
     } else if (token_type == TOKEN_TYPE_EOF) {
       if ((last_token_type != TOKEN_TYPE_STATEMENT_END &&
